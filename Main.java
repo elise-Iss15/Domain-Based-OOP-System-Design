@@ -2,7 +2,7 @@ public class Main {
     public static void main(String[] args) {
 
         Teacher teacher = new Teacher("Mr. Kagabo", 40, "Mathematics");
-        Student bella = new Student("Bella", 20, "1", 75.0);
+        Student Bella = new Student("Bella", 20, "1", 75.0);
         Student Seth = new Student("Seth", 22, "2", 60.0);
         Course math = new Course("Advanced Mathematics", "Mr. Kagabo");
 

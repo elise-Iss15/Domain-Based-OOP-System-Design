@@ -1,10 +1,17 @@
 
 public class Student extends Person {
+
     private String studentId;
     private double grade;
 
     public Student(String name, int age, String studentId, double grade) {
         super(name, age);
+        if (studentId == null || studentId.isEmpty()) {
+            throw new IllegalArgumentException("Student ID cannot be empty.");
+        }
+        if (grade < 0 || grade > 100) {
+            throw new InvalidGradeException("Grade " + grade + " is not valid. Grade must be between 0 and 100.");
+        }
         this.studentId = studentId;
         this.grade = grade;
     }
@@ -21,12 +28,13 @@ public class Student extends Person {
     public String getStudentId() {
         return studentId;
     }
-
     public double getGrade() {
         return grade;
     }
-
     public void setGrade(double grade) {
+        if (grade < 0 || grade > 100) {
+            throw new InvalidGradeException("Grade " + grade + " is not valid. Grade must be between 0 and 100.");
+        }
         this.grade = grade;
     }
 }

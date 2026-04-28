@@ -1,6 +1,5 @@
-
-public class InvalidGradeException extends RuntimeException {
-    public InvalidGradeException(String message) {
-        super(message);
+class InvalidGradeException extends SchoolSystemException {
+    public InvalidGradeException(String msg) {
+        super(msg);
     }
 }

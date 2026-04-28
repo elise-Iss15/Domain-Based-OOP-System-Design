@@ -1,100 +1,71 @@
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Student extends Person {
-
     private String studentId;
-    private double grade;
+    private Map<String, Double> formativeScores = new HashMap<>();
+    private Set<String> enrolledCourseNames = new HashSet<>();
+    private double summativeScore = 0.0;
 
-    private Set<String> enrolledCourseNames;
-
-    // using set to track stusdent's achivements
-    private Set<String> achievements;
-
-    public Student(String name, int age, String studentId, double grade) {
+    public Student(String name, int age, String studentId) {
         super(name, age);
-        if (studentId == null || studentId.isEmpty()) {
-            throw new IllegalArgumentException("Student ID cannot be empty.");
-        }
-        if (grade < 0 || grade > 100) {
-            throw new InvalidGradeException("Grade " + grade + " is not valid. Grade must be between 0 and 100.");
-        }
         this.studentId = studentId;
-        this.grade = grade;
-        this.enrolledCourseNames = new HashSet<>();
-        this.achievements = new HashSet<>();
-    }
-
-    public void addEnrolledCourse(String courseName) {
-        if (enrolledCourseNames.add(courseName)) {
-            System.out.println(getName() + " is now enrolled in course: " + courseName);
-        } else {
-            System.out.println(getName() + " is already enrolled in: " + courseName);
-        }
-    }
-
-    public void dropCourse(String courseName) {
-        if (enrolledCourseNames.remove(courseName)) {
-            System.out.println(getName() + " dropped course: " + courseName);
-        } else {
-            System.out.println(getName() + " was not enrolled in: " + courseName);
-        }
-    }
-
-    // Check all enrolled courses
-    public Set<String> getEnrolledCourseNames() {
-        return enrolledCourseNames;
-    }
-
-    // Award a unique badge/achievement
-    public void addAchievement(String achievement) {
-        if (achievements.add(achievement)) {
-            System.out.println("🏅 " + getName() + " earned achievement: " + achievement);
-        } else {
-            System.out.println(getName() + " already has achievement: " + achievement);
-        }
-    }
-
-    // Removing an achievement
-    public void removeAchievement(String achievement) {
-        achievements.remove(achievement);
-    }
-
-    // Get all achievements
-    public Set<String> getAchievements() {
-        return achievements;
     }
 
     @Override
     public void greet() {
-        System.out.println("Hi, I am a student. My name is " + getName() + ", ID: " + studentId);
+        System.out.println("Student: " + getName() + " (ID: " + studentId + ")");
     }
 
-    public void showGrade() {
-        System.out.println(getName() + "'s grade: " + grade);
+    public void enrollInCourse(Course course) {
+
+        if (enrolledCourseNames.contains(course.getCourseName())) {
+            throw new DuplicateEnrollmentException(getName(), course.getCourseName());
+        }
+
+        course.addStudentToRoster(this);
     }
 
-    public void showProfile() {
-        System.out.println("--- Student Profile ---");
-        System.out.println("Name     : " + getName());
-        System.out.println("ID       : " + studentId);
-        System.out.println("Grade    : " + grade);
-        System.out.println("Courses  : " + (enrolledCourseNames.isEmpty() ? "None" : enrolledCourseNames));
-        System.out.println("Badges   : " + (achievements.isEmpty() ? "None" : achievements));
+    public void addGrade(String task, double pct) {
+        formativeScores.put(task, pct);
+    }
+
+    public void setSummative(double score) {
+        this.summativeScore = score;
+    }
+
+    public double calculateGPA(int total, int present) {
+        double fAvg = 0;
+        if (!formativeScores.isEmpty()) {
+            for (double s : formativeScores.values())
+                fAvg += s;
+            fAvg /= formativeScores.size();
+        }
+        double att = (total == 0) ? 0 : ((double) present / total) * 100;
+
+        return (summativeScore == 0) ? (fAvg * 0.8 + att * 0.2) : (fAvg * 0.4 + summativeScore * 0.5 + att * 0.1);
+    }
+
+    public void displayReport(int total, int present) {
+        double gpa = calculateGPA(total, present);
+        System.out.println("  > [" + studentId + "] " + getName());
+        System.out.println("    Tasks: " + (formativeScores.isEmpty() ? "No grades" : formativeScores));
+        System.out.println("    Exam:  " + (summativeScore == 0 ? "Pending" : summativeScore + "%"));
+        System.out.printf("    GPA:   %.2f%% | Status: %s\n", gpa, (gpa >= 50 ? "PASSING" : "AT RISK"));
     }
 
     public String getStudentId() {
         return studentId;
     }
 
-    public double getGrade() {
-        return grade;
+    public Map<String, Double> getFormativeScores() {
+        return formativeScores;
     }
 
-    public void setGrade(double grade) {
-        if (grade < 0 || grade > 100) {
-            throw new InvalidGradeException("Grade " + grade + " is not valid. Grade must be between 0 and 100.");
-        }
-        this.grade = grade;
+    public Set<String> getEnrolledCourseNames() {
+        return enrolledCourseNames;
+    }
+
+    public double getSummativeScore() {
+        return summativeScore;
     }
 }

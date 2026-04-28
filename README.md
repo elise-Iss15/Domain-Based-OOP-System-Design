@@ -1,40 +1,39 @@
-# Student Management System
+# 🏫 School Management System — Summary
 
-A Java project demonstrating OOP principles and the Java Collections Framework.
+**Assignment Phase:** Data Persistence via File I/O
+**Branch:** `file-io` | **Language:** Java
 
-## Classes
+---
 
-- **Person** — abstract base class
-- **Student** — extends Person
-- **Teacher** — extends Person
-- **Course** — connects Teacher and Students
+## What This Project Is
 
-## OOP Concepts
+A Java application that manages the relationships between **Teachers**, **Students**, and **Courses** in a school environment. This phase of the project focuses on making data **persistent** — meaning information is saved to files and can be reloaded the next time the program runs, so nothing is lost between sessions.
 
-- **Encapsulation** — all fields are private
-- **Abstraction** — Person has abstract method greet()
-- **Inheritance** — Student and Teacher extend Person
-- **Polymorphism** — greet() behaves differently for each class
+---
 
-## Collections Used
+## How the Classes Relate
 
-| Collection | Location | Relationship | Reason |
-|---|---|---|---|
-| `List<Student>` | `Course` | Course → many Students | Ordered enrollment, one-to-many |
-| `Set<String>` | `Student` | Student → unique course names | Prevents duplicate enrollment |
-| `Set<String>` | `Student` | Student → unique achievements | Each badge earned only once |
-| `Map<String, Double>` | `Teacher` | studentId → grade | Fast lookup by key (ID) |
-| `Map<String, List<String>>` | `Course` | studentId → attendance dates | Key-value + ordered |
+- **Person** is the abstract base for everything — it holds the shared properties of name and age.
+- **Teacher** extends Person and manages a list of courses they are assigned to teach.
+- **Student** extends Person and tracks their grades, exam scores, attendance, and course enrollments.
+- **Course** is the central hub — it links one Teacher to many Students, and records attendance for each session.
 
-## Exception Handling
+---
 
-- **InvalidAgeException** — thrown when age is invalid
-- **InvalidGradeException** — thrown when grade is out of range
-- **CourseFullException** — thrown when course exceeds capacity
+## What File I/O Adds
 
-## How to Run
+Five text files are used to save and restore all system data:
 
-```bash
-javac *.java
-java Main
-```
+- **teachers.txt** — stores each teacher's name, age, and subject department.
+- **students.txt** — stores each student's name, age, and ID number.
+- **courses.txt** — stores which teacher runs each course and which students are enrolled.
+- **marks.txt** — stores each student's assignment scores and exam result.
+- **attendance.txt** — stores the dates each student was present in each course.
+
+A new **FileManager** class is responsible for writing all of this data when the program exits, and reading it back in the correct order when the program starts again.
+
+---
+
+## Loading Order Matters
+
+When reading from files, the system must load data in a specific sequence — Teachers and Students must be loaded first, because Courses depend on them already being in memory to link everything together. Marks and Attendance are loaded last.

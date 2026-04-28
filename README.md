@@ -37,28 +37,3 @@ A new **FileManager** class is responsible for writing all of this data when the
 ## Loading Order Matters
 
 When reading from files, the system must load data in a specific sequence — Teachers and Students must be loaded first, because Courses depend on them already being in memory to link everything together. Marks and Attendance are loaded last.
-
----
-
-## Code Analysis — What's Good
-
-- The class hierarchy is clean and well-structured with proper use of inheritance and encapsulation.
-- All the necessary getters were already added with comments indicating they were intended for file persistence — showing good forward planning.
-- Exceptions like `InvalidGradeException` and `DuplicateEnrollmentException` are properly handled and thrown before any bad data can be saved.
-
----
-
-## Code Analysis — What Needs Improvement
-
-1. **FileManager is missing** — the getters exist but the actual class that reads and writes files still needs to be built. This is the main task.
-
-2. **Course constructor has a hidden side effect** — creating a Course automatically assigns it to a Teacher. When loading from file, this would accidentally duplicate the teacher's workload. A separate loading method is needed.
-
-3. **Session count can go out of sync** — the total number of class sessions should be calculated from the actual saved dates rather than stored as a separate number, to keep data consistent.
-
-4. **GPA formula uses unexplained numbers** — the weights used to calculate a student's grade (40% formative, 50% exam, 10% attendance) are buried in the code without labels, making them hard to understand or change.
-
-5. **Date input is not validated** — the attendance feature accepts any text as a date. A format check should be added to prevent bad data from being saved to file.
-
-author: Elyse Ishimwe
-github: Elise-Iss15

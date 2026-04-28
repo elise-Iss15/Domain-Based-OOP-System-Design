@@ -1,137 +1,174 @@
+import java.util.*;
+
 public class Main {
     public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
 
-        // Exceptional/error handling
+        Map<String, Student> studentRegistry = new HashMap<>();
+        List<Course> courses = new ArrayList<>();
+        List<Teacher> teachers = new ArrayList<>();
+        List<Student> studentList = new ArrayList<>();
 
-        System.out.println("=== Test: Invalid Age ===");
-        try {
-            new Student("Tom", -5, "S99", 80.0);
-        } catch (InvalidAgeException e) {
-            System.out.println("Error: " + e.getMessage());
+        fileManager.loadData(studentList, teachers, courses, studentRegistry);
+
+        while (true) {
+            try {
+                System.out.println("\n========================================");
+                System.out.println("      ACADEMIC MANAGEMENT SYSTEM      ");
+                System.out.println("========================================");
+                System.out.println("1. Register Teacher");
+                System.out.println("2. Create Course");
+                System.out.println("3. Enroll Student");
+                System.out.println("4. Take Attendance");
+                System.out.println("5. Grade Student");
+                System.out.println("6. View Faculty Dashboard");
+                System.out.println("7. View Course Reports");
+                System.out.println("8. Exit");
+                System.out.print("\nAction Selection > ");
+
+                String choice = sc.nextLine();
+
+                if (choice.equals("8")) {
+                    System.out.println("Saving progress to files...");
+
+                    fileManager.saveData(studentList, teachers, courses);
+                    break;
+                }
+
+                switch (choice) {
+                    case "1":
+                        System.out.println("\n--- Teacher Registration ---");
+                        System.out.print("Name: ");
+                        String tn = sc.nextLine();
+                        System.out.print("Age: ");
+                        int ta = Integer.parseInt(sc.nextLine());
+                        System.out.print("Department/Subject: ");
+                        String ts = sc.nextLine();
+
+                        Teacher newTeacher = new Teacher(tn, ta, ts);
+                        teachers.add(newTeacher);
+                        System.out.println("Teacher " + tn + " registered successfully.");
+                        break;
+
+                    case "2":
+                        if (teachers.isEmpty())
+                            throw new SchoolSystemException("No teachers available. Register a teacher first.");
+
+                        System.out.println("\n--- Create New Course ---");
+                        System.out.print("Course Name: ");
+                        String cn = sc.nextLine();
+
+                        System.out.println("Select Instructor:");
+                        for (int i = 0; i < teachers.size(); i++) {
+                            System.out.println(
+                                    i + ". " + teachers.get(i).getName() + " (" + teachers.get(i).getSubject() + ")");
+                        }
+                        int tIdx = Integer.parseInt(sc.nextLine());
+
+                        courses.add(new Course(cn, teachers.get(tIdx)));
+                        System.out.println("Course '" + cn + "' created under " + teachers.get(tIdx).getName());
+                        break;
+
+                    case "3":
+                        if (courses.isEmpty())
+                            throw new SchoolSystemException("No courses available. Create a course first.");
+
+                        System.out.println("\n--- Student Enrollment ---");
+                        System.out.print("Name: ");
+                        String sn = sc.nextLine();
+                        System.out.print("Age: ");
+                        int sa = Integer.parseInt(sc.nextLine());
+                        System.out.print("Student ID: ");
+                        String sid = sc.nextLine();
+
+                        Student newS = new Student(sn, sa, sid);
+
+                        System.out.println("Select Course to Join:");
+                        for (int i = 0; i < courses.size(); i++) {
+                            System.out.println(i + ". " + courses.get(i).getCourseName());
+                        }
+                        int cIdx = Integer.parseInt(sc.nextLine());
+
+                        newS.enrollInCourse(courses.get(cIdx));
+
+                        studentList.add(newS);
+                        studentRegistry.put(sid, newS);
+                        System.out.println(sn + " enrolled successfully.");
+                        break;
+
+                    case "4":
+                        if (courses.isEmpty())
+                            throw new SchoolSystemException("No courses exist.");
+
+                        System.out.println("\n--- Session Attendance ---");
+                        for (int i = 0; i < courses.size(); i++) {
+                            System.out.println(i + ". " + courses.get(i).getCourseName());
+                        }
+                        System.out.print("Select Course Index: ");
+                        int attIdx = Integer.parseInt(sc.nextLine());
+
+                        courses.get(attIdx).takeAttendance(sc);
+                        break;
+
+                    case "5":
+                        if (studentRegistry.isEmpty())
+                            throw new SchoolSystemException("No students in registry.");
+
+                        System.out.println("\n--- Grading Dashboard ---");
+                        System.out.print("Enter Student ID: ");
+                        String id = sc.nextLine();
+                        Student target = studentRegistry.get(id);
+
+                        if (target == null)
+                            throw new StudentNotFoundException(id);
+
+                        System.out.println("Select Course for Grading:");
+                        for (int i = 0; i < courses.size(); i++) {
+                            System.out.println(i + ". " + courses.get(i).getCourseName());
+                        }
+                        int gIdx = Integer.parseInt(sc.nextLine());
+                        Course selectedCourse = courses.get(gIdx);
+
+                        System.out.print("Task Title: ");
+                        String task = sc.nextLine();
+                        System.out.print("Points Earned: ");
+                        double score = Double.parseDouble(sc.nextLine());
+                        System.out.print("Total Possible: ");
+                        double max = Double.parseDouble(sc.nextLine());
+
+                        selectedCourse.getTeacher().grade(target, task, score, max);
+                        System.out.println("Grade recorded for " + target.getName());
+                        break;
+
+                    case "6":
+                        System.out.println("\n--- Faculty Workload Dashboard ---");
+                        if (teachers.isEmpty())
+                            System.out.println("No faculty registered.");
+                        for (Teacher t : teachers)
+                            t.showWorkload();
+                        break;
+
+                    case "7":
+                        System.out.println("\n--- Course Summary Reports ---");
+                        if (courses.isEmpty())
+                            System.out.println("No courses currently active.");
+                        for (Course c : courses)
+                            c.showReport();
+                        break;
+
+                    default:
+                        System.out.println("Invalid choice. Please select 1-8.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("INPUT ERROR: Numeric data required (Choice/Age/Score/Index).");
+            } catch (IndexOutOfBoundsException e) {
+                System.out.println("SELECTION ERROR: That index does not exist in the list.");
+            } catch (SchoolSystemException e) {
+                System.out.println("POLICY ERROR: " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println("UNEXPECTED SYSTEM ERROR: " + e.getMessage());
+            }
         }
-
-        System.out.println("\n=== Test: Invalid Grade ===");
-        try {
-            new Student("Tom", 20, "S99", 150.0);
-        } catch (InvalidGradeException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-
-        System.out.println("\n=== Test: Empty Name ===");
-        try {
-            new Student("", 20, "S99", 80.0);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-
-        // creating objects and collections
-
-        System.out.println("\n=== Creating Valid Objects ===");
-        Teacher mrKagabo = new Teacher("Mr. Kagabo", 40, "Mathematics");
-        Teacher msAmina = new Teacher("Ms. Amina", 35, "Science");
-
-        Student bella = new Student("Bella", 20, "S01", 75.0);
-        Student seth = new Student("Seth", 22, "S02", 60.0);
-        Student annabeth = new Student("Annabeth", 21, "S03", 70.0);
-
-        Course math = new Course("Advanced Mathematics", mrKagabo);
-        Course science = new Course("Biology 101", msAmina);
-
-        System.out.println("\n=== [List] Enrolling Students into Courses ===");
-        math.enrollStudent(bella);
-        math.enrollStudent(seth);
-        math.enrollStudent(annabeth);
-
-        science.enrollStudent(bella);
-        science.enrollStudent(annabeth);
-
-        // testing duplicates
-        System.out.println("\n--- Duplicate Enrollment Test ---");
-        math.enrollStudent(bella);
-
-        // Removing a student from course List
-        System.out.println("\n--- Unenrolling Seth from Math ---");
-        math.unenrollStudent(seth);
-
-        // showing the course info
-        System.out.println("\n--- Current Math Enrollment ---");
-        math.showInfo();
-
-        // using set in enrolled courses in student class
-
-        System.out.println("\n=== [Set] Student's Unique Course Memberships ===");
-        System.out.println("Bella's courses : " + bella.getEnrolledCourseNames());
-        System.out.println("Annabeth's courses: " + annabeth.getEnrolledCourseNames());
-
-        // testing the duplicates in course (see how the set handles it)
-        bella.addEnrolledCourse("Advanced Mathematics");
-
-        // adding a student's achievements
-
-        System.out.println("\n=== [Set] Awarding Unique Achievements ===");
-        bella.addAchievement("Top Scorer");
-        bella.addAchievement("Perfect Attendance");
-        bella.addAchievement("Top Scorer");
-
-        annabeth.addAchievement("Most Improved");
-        annabeth.addAchievement("Top Scorer");
-
-        // Remove an achievement
-        bella.removeAchievement("Perfect Attendance");
-        System.out.println("Bella's achievements after removal: " + bella.getAchievements());
-
-        // teacher's grade's book
-
-        System.out.println("\n=== [Map] Teacher Grade Book ===");
-        mrKagabo.studentGrades(bella, 92.0);
-        mrKagabo.studentGrades(annabeth, 78.5);
-
-        // searching for student grade using student Id
-        mrKagabo.lookupGrade("S01");
-        mrKagabo.lookupGrade("S99");
-
-        // Updating student's grade
-        mrKagabo.studentGrades(bella, 95.0);
-
-        // Show full grade book
-        mrKagabo.showGradeBook();
-
-        // Remove a record
-
-        mrKagabo.removeGradeRecord("S03");
-        mrKagabo.showGradeBook();
-
-        // Attendance print out using Map and List
-
-        System.out.println("\n=== [Map<String,List>] Attendance Records ===");
-        math.markAttendance(bella, "2025-04-01");
-        math.markAttendance(bella, "2025-04-03");
-        math.markAttendance(annabeth, "2025-04-01");
-        math.markAttendance(annabeth, "2025-04-03");
-        math.markAttendance(annabeth, "2025-04-05");
-
-        // show attendance for every student
-        math.showAttendance(bella);
-        math.showAttendance(annabeth);
-
-        // remove an attendance record incase it was marked in error
-        math.removeAttendance(bella, "2025-04-03");
-        math.showAttendance(bella);
-
-        // student profiles
-
-        System.out.println("\n=== Full Student Profiles ===");
-        bella.showProfile();
-        System.out.println();
-        annabeth.showProfile();
-
-        // greetings or more of introductions
-        System.out.println("\n=== Greetings ===");
-        mrKagabo.greet();
-        msAmina.greet();
-        bella.greet();
-        annabeth.greet();
-
-        System.out.println("\nProgram finished successfully.");
+        System.out.println("\nLogging out... System shutdown complete. Goodbye!");
     }
 }

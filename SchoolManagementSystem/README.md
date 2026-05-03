@@ -84,7 +84,7 @@ _(Created automatically on first launch)_
 mvn javafx:run
 ```
 
-Or via your IDE (IntelliJ / Eclipse) with JavaFX 21 configured.
+Or via your IDE (IntelliJ) with JavaFX 21 configured.
 
 ---
 

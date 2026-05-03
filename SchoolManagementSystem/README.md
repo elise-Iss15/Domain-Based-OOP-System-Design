@@ -1,28 +1,7 @@
 # 🏫 SchoolManagementSystem
 
 A JavaFX Maven application that integrates a fully designed backend school management system.  
-**Renamed** from `SchoolSystemFX` → `SchoolManagementSystem`  
-**Improved** with patterns from the `HealthSystem` reference implementation.
 
----
-
-## ✨ What's New (Improvements from HealthSystem)
-
-| Feature | Before (SchoolSystemFX) | After (SchoolManagementSystem) |
-|---|---|---|
-| **Authentication** | No login — opens dashboard directly | Login / Register screen (FXML-based) |
-| **Role-Based Views** | Single view for all users | ADMIN / TEACHER / STUDENT roles with tailored UI |
-| **Input Validation** | Basic null checks only | `InputValidator` — regex-validated names, IDs, ages, scores |
-| **Password Security** | No password system | `PasswordUtil` — SHA-256 hashed passwords |
-| **User Persistence** | No user accounts | `PersistenceService` — saves accounts to `~/.schoolmanagementsystem/users.properties` |
-| **Auth Service** | N/A | `AuthService` — signup / login with duplicate detection |
-| **Logout** | N/A | Logout button navigates back to auth screen |
-| **User Session** | N/A | Session passed from Auth → Main via `SchoolUser` object |
-| **CSS Theming** | Basic dark theme | Enhanced dark GitHub-inspired theme |
-| **FXML** | Programmatic UI only | Auth screen uses `auth-view.fxml` |
-| **pom.xml** | Java 17 | Upgraded to Java 21, JUnit 5 included |
-
----
 
 ## 📦 Project Structure
 

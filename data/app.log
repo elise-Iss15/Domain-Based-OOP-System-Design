@@ -1,0 +1,39 @@
+[2026-05-04 00:13:03] [INFO] Default admin account created (admin / admin123).
+[2026-05-04 00:13:04] [INFO] School Management System started.
+[2026-05-04 00:14:03] [INFO] New account registered: elyse [STUDENT]
+[2026-05-04 00:14:03] [INFO] Data loaded — 0 teachers, 0 students, 0 courses.
+[2026-05-04 00:14:03] [INFO] Dashboard opened for: elyse
+[2026-05-04 00:14:10] [INFO] All data saved to files.
+[2026-05-04 00:14:10] [INFO] Manual save triggered by: elyse
+[2026-05-04 00:14:11] [INFO] All data saved to files.
+[2026-05-04 00:14:11] [INFO] Logout: elyse
+[2026-05-04 00:14:24] [INFO] Login: elyse [STUDENT]
+[2026-05-04 00:14:24] [INFO] Data loaded — 0 teachers, 0 students, 0 courses.
+[2026-05-04 00:14:24] [INFO] Dashboard opened for: elyse
+[2026-05-04 00:14:32] [INFO] All data saved to files.
+[2026-05-04 00:14:32] [INFO] Logout: elyse
+[2026-05-04 00:14:48] [INFO] Login: admin [ADMIN]
+[2026-05-04 00:14:48] [INFO] Data loaded — 0 teachers, 0 students, 0 courses.
+[2026-05-04 00:14:48] [INFO] Dashboard opened for: admin
+[2026-05-04 00:15:29] [INFO] All data saved to files.
+[2026-05-04 00:15:29] [INFO] Logout: admin
+[2026-05-04 00:16:26] [INFO] New account registered: admin_elyse [ADMIN]
+[2026-05-04 00:16:26] [INFO] Data loaded — 0 teachers, 0 students, 0 courses.
+[2026-05-04 00:16:26] [INFO] Dashboard opened for: admin_elyse
+[2026-05-04 00:16:50] [INFO] Application closed.
+[2026-05-04 00:17:01] [INFO] School Management System started.
+[2026-05-04 00:17:23] [INFO] Login: elyse [STUDENT]
+[2026-05-04 00:17:23] [INFO] Data loaded — 0 teachers, 0 students, 0 courses.
+[2026-05-04 00:17:23] [INFO] Dashboard opened for: elyse
+[2026-05-04 00:17:35] [INFO] All data saved to files.
+[2026-05-04 00:17:35] [INFO] Manual save triggered by: elyse
+[2026-05-04 00:17:38] [INFO] Application closed.
+[2026-05-04 00:20:24] [INFO] School Management System started.
+[2026-05-04 00:22:03] [INFO] Login: elyse [STUDENT]
+[2026-05-04 00:22:03] [INFO] Data loaded — 0 teachers, 0 students, 0 courses.
+[2026-05-04 00:22:03] [INFO] Dashboard opened for: elyse
+[2026-05-04 00:22:27] [INFO] All data saved to files.
+[2026-05-04 00:22:27] [INFO] Manual save triggered by: elyse
+[2026-05-04 00:22:29] [INFO] All data saved to files.
+[2026-05-04 00:22:29] [INFO] Logout: elyse
+[2026-05-04 00:22:47] [INFO] Application closed.
